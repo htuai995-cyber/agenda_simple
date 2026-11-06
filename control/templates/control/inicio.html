@@ -1,0 +1,66 @@
+{% extends "control/base.html" %}
+
+{% block title %}Inicio | Agenda Simple{% endblock %}
+
+{% block content %}
+    <section class="welcome">
+        <div>
+            <p class="eyebrow">AGENDA SIMPLE</p>
+            <h1>Tu agenda, en orden.</h1>
+            <p>Administra clientes y organiza tus próximas citas desde un solo lugar.</p>
+        </div>
+        <a class="button button-light" href="{% url 'cita_crear' %}">Agendar cita</a>
+    </section>
+
+    <section class="stats" aria-label="Resumen">
+        <article class="stat-card">
+            <span>Clientes registrados</span>
+            <strong>{{ total_clientes }}</strong>
+            <a href="{% url 'clientes' %}">Ver clientes</a>
+        </article>
+        <article class="stat-card">
+            <span>Citas en agenda</span>
+            <strong>{{ total_citas }}</strong>
+            <a href="{% url 'citas' %}">Ver citas</a>
+        </article>
+        <article class="stat-card">
+            <span>Citas para hoy</span>
+            <strong>{{ citas_hoy }}</strong>
+            <a href="{% url 'citas' %}">Abrir agenda</a>
+        </article>
+    </section>
+
+    <section class="panel">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">PRÓXIMAMENTE</p>
+                <h2>Próximas citas</h2>
+            </div>
+            <a class="text-link" href="{% url 'citas' %}">Ver todas</a>
+        </div>
+        {% if citas %}
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>Fecha y hora</th><th>Asunto</th><th>Cliente</th><th>Estado</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for cita in citas %}
+                            <tr>
+                                <td>{{ cita.fecha|date:"d/m/Y" }} · {{ cita.hora|time:"H:i" }}</td>
+                                <td>{{ cita.asunto }}</td>
+                                <td>{{ cita.client }}</td>
+                                <td><span class="badge">{{ cita.get_estado_display|default:"Sin estado" }}</span></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <p>No hay citas próximas en la agenda.</p>
+                <a class="button" href="{% url 'cita_crear' %}">Crear primera cita</a>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}
